@@ -12,7 +12,7 @@ namespace EdCon.MiniGameTemplate.HUD
         
         public float MaxOpacity { get; set; }
         public float MinOpacity { get; set; }
-
-        public void Select();
+        
+        public void SetDefaultValues();
     }
 }
