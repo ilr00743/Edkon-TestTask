@@ -5,7 +5,7 @@ using EdCon.MiniGameTemplate.HUD.Popups;
 using Services.SaveLoad;
 using UnityEngine;
 
-namespace Services
+namespace Services.HUDCustomization
 {
     public class HUDCustomizationService : MonoBehaviour
     {
