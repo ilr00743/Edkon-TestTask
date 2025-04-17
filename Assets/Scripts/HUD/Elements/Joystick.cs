@@ -1,6 +1,6 @@
 ﻿namespace EdCon.MiniGameTemplate.HUD
 {
-    public class HUDElementProperties
+    public class Joystick : CustomizableHUDElement
     {
         
     }

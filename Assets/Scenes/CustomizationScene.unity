@@ -501,7 +501,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 213075928}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 493023213}
+        m_TargetAssemblyTypeName: EdCon.MiniGameTemplate.HUD.HUDCustomizationService,
+          Assembly-CSharp
+        m_MethodName: SaveElementsChanges
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &213075928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -551,6 +564,8 @@ GameObject:
   - component: {fileID: 217226839}
   - component: {fileID: 217226841}
   - component: {fileID: 217226840}
+  - component: {fileID: 217226842}
+  - component: {fileID: 217226843}
   m_Layer: 5
   m_Name: toast_container
   m_TagString: Untagged
@@ -616,6 +631,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 217226838}
   m_CullTransparentMesh: 1
+--- !u!225 &217226842
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217226838}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &217226843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217226838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2b79ab914c9452cbc4a48ae9776d7b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _moveDistance: 200
+  _moveDuration: 1
+  _pauseDuration: 2
+  _moveEase: 4
 --- !u!1 &228883633
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008,7 +1051,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be85826e773e420ca7fed4c05e82f4d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 444795109}
+  _elementType: 3
+  _defaultConfiguration: {fileID: 11400000, guid: 16e9315631ac0c6438fde2e1020a93f4, type: 2}
   _minWidth: 200
   _maxWidth: 700
   _minHeight: 200
@@ -1057,9 +1101,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _highlighter: {fileID: 892716927}
-  _scaleSlider: {fileID: 3952796263037944682}
-  _opacitySlider: {fileID: 822601976}
   _propertiesPanel: {fileID: 782706611}
+  _notificationPopup: {fileID: 217226843}
 --- !u!4 &493023214
 Transform:
   m_ObjectHideFlags: 0
@@ -2004,7 +2047,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3efab4d39b8467e879cd0e75a598a90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 1113451747}
+  _elementType: 2
+  _defaultConfiguration: {fileID: 11400000, guid: 0701b5aae38b9314caa6ceccef8ebeb5, type: 2}
   _minWidth: 150
   _maxWidth: 300
   _minHeight: 150
@@ -2289,7 +2333,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1394840720}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 493023213}
+        m_TargetAssemblyTypeName: Services.HUDCustomizationService, Assembly-CSharp
+        m_MethodName: ResetHUD
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1394840720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2413,7 +2469,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Empty
+  m_Text: Changes have been saved
 --- !u!222 &1465128572
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2935,7 +2991,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890fd377db89414e969fde3aa46d0618, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 2103814977}
+  _elementType: 1
+  _defaultConfiguration: {fileID: 11400000, guid: 7612208364594244094e0dc51f1821d1, type: 2}
   _minWidth: 150
   _maxWidth: 300
   _minHeight: 150

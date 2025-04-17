@@ -1,13 +1,23 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using EdCon.MiniGameTemplate.HUD;
+using EdCon.MiniGameTemplate.HUD.Popups;
+using Services.SaveLoad;
+using UnityEngine;
 
-namespace EdCon.MiniGameTemplate.HUD
+namespace Services
 {
     public class HUDCustomizationService : MonoBehaviour
     {
+        private const string JSON_KEY = "HUDElementsData";
+        
         [SerializeField] private GameObject _highlighter;
         [SerializeField] private HUDPropertiesPanel _propertiesPanel;
+        [SerializeField] private FloatingPopup _notificationPopup;
 
         private CustomizableHUDElement _selectedHUDElement;
+        private List<CustomizableHUDElement> _allCustomizableElements;
+        private SaveLoadService _saveLoadService;
 
         public static HUDCustomizationService Instance { get; private set; }
 
@@ -24,12 +34,18 @@ namespace EdCon.MiniGameTemplate.HUD
         
         private void Start()
         {
+            _saveLoadService = SaveLoadService.GetInstance();
+            _propertiesPanel.gameObject.SetActive(false);
+            
             _selectedHUDElement = null;
-            var allHudElements = FindObjectsOfType(typeof(CustomizableHUDElement));
+            
+            _allCustomizableElements = FindObjectsOfType(typeof(CustomizableHUDElement)).Cast<CustomizableHUDElement>().ToList();
             
             _propertiesPanel.AddOnScaleChangedListener(OnScaleValueChanged);
             
             _propertiesPanel.AddOnOpacityChangedListener(OnOpacityValueChanged);
+            
+            LoadElementsData();
         }
 
         private void OnScaleValueChanged(float value)
@@ -60,11 +76,10 @@ namespace EdCon.MiniGameTemplate.HUD
             highlighterTransform.SetParent(hudElement.transform);
             highlighterTransform.anchorMax = Vector2.one;
             highlighterTransform.anchorMin = Vector2.zero;
-            
             highlighterTransform.offsetMax = Vector2.zero;
             highlighterTransform.offsetMin = Vector2.zero;
-            
             _highlighter.SetActive(true);
+            
             _selectedHUDElement = hudElement;
 
             var currentElementWidth = _selectedHUDElement.GetComponent<RectTransform>().sizeDelta.x;
@@ -73,6 +88,64 @@ namespace EdCon.MiniGameTemplate.HUD
             
             var opacitySliderValue = (_selectedHUDElement.CurrentOpacity - _selectedHUDElement.MinOpacity) / (_selectedHUDElement.MaxOpacity - _selectedHUDElement.MinOpacity);
             _propertiesPanel.SetOpacitySliderValue(opacitySliderValue);
+            _propertiesPanel.gameObject.SetActive(true);
+        }
+
+        public void SaveElementsChanges()
+        {
+            _propertiesPanel.gameObject.SetActive(false);
+            _highlighter.SetActive(false);
+            
+            var dataCollection = new HUDElementDataList
+            {
+                Elements = _allCustomizableElements.Select(element => element.GetData()).ToArray()
+            };
+            
+            _saveLoadService.Save(JSON_KEY, dataCollection);
+            _notificationPopup.PlayAnimation();
+        }
+
+        private void LoadElementsData()
+        {
+            if (!_saveLoadService.HasSave(JSON_KEY))
+            {
+                ResetHUD();
+                Debug.Log("No save file found");
+                return;   
+            }
+            
+            var dataCollection = _saveLoadService.Load<HUDElementDataList>(JSON_KEY);
+
+            foreach (var data in dataCollection.Elements)
+            {
+                var element = _allCustomizableElements.FirstOrDefault(element => element.ElementType == data.ElementType);
+
+                if (element != null)
+                {
+                    element.ApplySaveData(data);
+                }
+                else
+                {
+                    Debug.Log($"Element {data.ElementType} not found");
+                }
+            }
+        }
+
+        public void ResetHUD()
+        {
+            _propertiesPanel.gameObject.SetActive(false);
+            _highlighter.SetActive(false);
+            
+            foreach (var element in _allCustomizableElements)
+            {
+                element.SetDefaultValues();
+            }
+        }
+
+        [ContextMenu("Delete Elements Data")]
+        public void DeleteElementsData()
+        {
+            SaveLoadService.GetInstance().Delete(JSON_KEY);
         }
     }
 }
