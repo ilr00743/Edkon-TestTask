@@ -1059,6 +1059,7 @@ MonoBehaviour:
   _highlighter: {fileID: 892716927}
   _scaleSlider: {fileID: 3952796263037944682}
   _opacitySlider: {fileID: 822601976}
+  _propertiesPanel: {fileID: 782706611}
 --- !u!4 &493023214
 Transform:
   m_ObjectHideFlags: 0
@@ -1493,6 +1494,7 @@ GameObject:
   m_Component:
   - component: {fileID: 782706609}
   - component: {fileID: 782706610}
+  - component: {fileID: 782706611}
   m_Layer: 5
   m_Name: HUDPropertiesPanel
   m_TagString: Untagged
@@ -1547,6 +1549,22 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &782706611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782706608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa3505b748c40faad4c2600a9bd7d07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scalePercent: {fileID: 4406698866825723116}
+  _opacityPercent: {fileID: 134853318}
+  _scaleSlider: {fileID: 3952796263037944682}
+  _opacitySlider: {fileID: 822601976}
 --- !u!1 &822601973
 GameObject:
   m_ObjectHideFlags: 0
@@ -1630,7 +1648,7 @@ MonoBehaviour:
   m_FillRect: {fileID: 1291776185}
   m_HandleRect: {fileID: 627621202}
   m_Direction: 0
-  m_MinValue: 0.1
+  m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 1

@@ -7,19 +7,22 @@ namespace EdCon.MiniGameTemplate.HUD
     [RequireComponent(typeof(CanvasGroup))]
     public abstract class CustomizableHUDElement : MonoBehaviour, ICustomizable
     {
-        private bool _isDragging;
-        
         [SerializeField] private CanvasGroup _canvasGroup;
-        
+
         [Header("Size Parameters")]
         [SerializeField] private float _minWidth;
+
         [SerializeField] private float _maxWidth;
         [SerializeField] private float _minHeight;
         [SerializeField] private float _maxHeight;
 
-        [Header("Opacity Parameter")]
+        [Header("Opacity Parameters")]
         [SerializeField] private float _minOpacity;
+
         [SerializeField] private float _maxOpacity;
+
+        private RectTransform _rectTransform;
+        private bool _isDragging;
         
         public float MinWidth { get => _minWidth; set => _minWidth = value; }
         public float MaxWidth { get => _maxWidth; set => _maxWidth = value; }
@@ -29,6 +32,11 @@ namespace EdCon.MiniGameTemplate.HUD
         public float MaxOpacity { get => _maxOpacity; set => _maxOpacity = value; }
         
         public float CurrentOpacity { get => _canvasGroup.alpha; set => _canvasGroup.alpha = value; }
+
+        private void Awake()
+        {
+            _rectTransform = GetComponent<RectTransform>();
+        }
 
         public virtual void Select()
         {
@@ -40,25 +48,29 @@ namespace EdCon.MiniGameTemplate.HUD
             if (!_isDragging) return;
 
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                GetComponent<RectTransform>().parent as RectTransform,
+                _rectTransform.parent as RectTransform,
                 eventData.position,
                 eventData.pressEventCamera,
                 out var localPoint
             );
 
-            GetComponent<RectTransform>().localPosition = localPoint;
+            _rectTransform.localPosition = localPoint;
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
             _isDragging = true;
             Select();
-            
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             _isDragging = false;
+        }
+
+        public void SetScale(Vector2 scale)
+        {
+            _rectTransform.sizeDelta = scale;
         }
     }
 }

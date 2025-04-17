@@ -1,18 +1,14 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 namespace EdCon.MiniGameTemplate.HUD
 {
     public class HUDCustomizationService : MonoBehaviour
     {
         [SerializeField] private GameObject _highlighter;
-        [SerializeField] private Slider _scaleSlider;
-        [SerializeField] private Slider _opacitySlider;
-        
+        [SerializeField] private HUDPropertiesPanel _propertiesPanel;
+
         private CustomizableHUDElement _selectedHUDElement;
-            
+
         public static HUDCustomizationService Instance { get; private set; }
 
         private void Awake()
@@ -30,26 +26,31 @@ namespace EdCon.MiniGameTemplate.HUD
         {
             _selectedHUDElement = null;
             var allHudElements = FindObjectsOfType(typeof(CustomizableHUDElement));
-            var customizableElements = allHudElements.OfType<ICustomizable>().Cast<CustomizableHUDElement>().ToArray();
-            Debug.Log(customizableElements.Length);
             
-            _scaleSlider.onValueChanged.AddListener(value =>
-            {
-                if (_selectedHUDElement != null)
-                {
-                    float height = Mathf.Lerp(_selectedHUDElement.MinHeight, _selectedHUDElement.MaxHeight, value);
-                    float width = Mathf.Lerp(_selectedHUDElement.MinWidth, _selectedHUDElement.MaxWidth, value);
-                    _selectedHUDElement.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
-                }
-            });
+            _propertiesPanel.AddOnScaleChangedListener(OnScaleValueChanged);
             
-            _opacitySlider.onValueChanged.AddListener(value =>
+            _propertiesPanel.AddOnOpacityChangedListener(OnOpacityValueChanged);
+        }
+
+        private void OnScaleValueChanged(float value)
+        {
+            if (_selectedHUDElement != null)
             {
-                if (_selectedHUDElement != null)
-                {
-                    _selectedHUDElement.CurrentOpacity = Mathf.Lerp(_selectedHUDElement.MinOpacity, _selectedHUDElement.MaxOpacity, value);
-                }
-            });
+                float height = Mathf.Lerp(_selectedHUDElement.MinHeight, _selectedHUDElement.MaxHeight, value);
+                float width = Mathf.Lerp(_selectedHUDElement.MinWidth, _selectedHUDElement.MaxWidth, value);
+                    
+                _selectedHUDElement.SetScale(new Vector2(width, height));
+                _propertiesPanel.SetScaleSliderValue(value);
+            }
+        }
+
+        private void OnOpacityValueChanged(float value)
+        {
+            if (_selectedHUDElement != null)
+            {
+                _selectedHUDElement.CurrentOpacity = Mathf.Lerp(_selectedHUDElement.MinOpacity, _selectedHUDElement.MaxOpacity, value);
+                _propertiesPanel.SetOpacitySliderValue(value);
+            }
         }
 
         public void ActivateCustomizationForElement(CustomizableHUDElement hudElement)
@@ -65,21 +66,13 @@ namespace EdCon.MiniGameTemplate.HUD
             
             _highlighter.SetActive(true);
             _selectedHUDElement = hudElement;
-            
+
             var currentElementWidth = _selectedHUDElement.GetComponent<RectTransform>().sizeDelta.x;
+            var scaleSliderValue = (currentElementWidth - _selectedHUDElement.MinWidth) / (_selectedHUDElement.MaxWidth - _selectedHUDElement.MinWidth);
+            _propertiesPanel.SetScaleSliderValue(scaleSliderValue);
             
-            _scaleSlider.value = (currentElementWidth - _selectedHUDElement.MinWidth) / (_selectedHUDElement.MaxWidth - _selectedHUDElement.MinWidth);
-            _opacitySlider.value = (_selectedHUDElement.CurrentOpacity - _selectedHUDElement.MinOpacity) / (_selectedHUDElement.MaxOpacity - _selectedHUDElement.MinOpacity);
-        }
-
-        public void ChangeElementOpacity(float opacity)
-        {
-            
-        }
-
-        public void ChangeElementSize(float size)
-        {
-            
+            var opacitySliderValue = (_selectedHUDElement.CurrentOpacity - _selectedHUDElement.MinOpacity) / (_selectedHUDElement.MaxOpacity - _selectedHUDElement.MinOpacity);
+            _propertiesPanel.SetOpacitySliderValue(opacitySliderValue);
         }
     }
 }
